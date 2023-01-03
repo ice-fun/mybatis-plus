@@ -27,6 +27,7 @@ import com.baomidou.mybatisplus.core.toolkit.*;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlUtils;
 import com.baomidou.mybatisplus.core.toolkit.sql.StringEscape;
+import com.baomidou.mybatisplus.core.conditions.segments.ColumnSegment;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -188,6 +189,16 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
     }
 
     @Override
+    public Children notLikeLeft(boolean condition, R column, Object val) {
+        return likeValue(condition, NOT_LIKE, column, val, SqlLike.LEFT);
+    }
+
+    @Override
+    public Children notLikeRight(boolean condition, R column, Object val) {
+        return likeValue(condition, NOT_LIKE, column, val, SqlLike.RIGHT);
+    }
+
+    @Override
     public Children between(boolean condition, R column, Object val1, Object val2) {
         return maybeDo(condition, () -> appendSqlSegments(columnToSqlSegment(column), BETWEEN,
             () -> formatParam(null, val1), AND, () -> formatParam(null, val2)));
@@ -344,8 +355,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
     }
 
     @Override
-    @SafeVarargs
-    public final Children orderBy(boolean condition, boolean isAsc, R column, R... columns) {
+    public Children orderBy(boolean condition, boolean isAsc, R column, R... columns) {
         return maybeDo(condition, () -> {
             final SqlKeyword mode = isAsc ? ASC : DESC;
             appendSqlSegments(ORDER_BY, columnToSqlSegment(columnSqlInjectFilter(column)), mode);
@@ -633,7 +643,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
     /**
      * 获取 columnName
      */
-    protected final ISqlSegment columnToSqlSegment(R column) {
+    protected final ColumnSegment columnToSqlSegment(R column) {
         return () -> columnToString(column);
     }
 

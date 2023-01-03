@@ -17,6 +17,7 @@ package com.baomidou.mybatisplus.extension.toolkit;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.apache.ibatis.executor.Executor;
@@ -49,7 +50,7 @@ public class JdbcUtils {
     public static DbType getDbType(Executor executor) {
         try {
             Connection conn = executor.getTransaction().getConnection();
-            return JDBC_DB_TYPE_CACHE.computeIfAbsent(conn.getMetaData().getURL(), JdbcUtils::getDbType);
+            return CollectionUtils.computeIfAbsent(JDBC_DB_TYPE_CACHE, conn.getMetaData().getURL(), JdbcUtils::getDbType);
         } catch (SQLException e) {
             throw ExceptionUtils.mpe(e);
         }
@@ -98,7 +99,7 @@ public class JdbcUtils {
             return DbType.GBASE;
         } else if (url.contains(":gbasedbt-sqli:") || url.contains(":informix-sqli:")) {
             return DbType.GBASE_8S;
-        } else if (url.contains(":clickhouse:")) {
+        } else if (url.contains(":ch:") || url.contains(":clickhouse:")) {
             return DbType.CLICK_HOUSE;
         } else if (url.contains(":oscar:")) {
             return DbType.OSCAR;
@@ -124,6 +125,16 @@ public class JdbcUtils {
             return DbType.XCloud;
         } else if (url.contains(":firebirdsql:")) {
             return DbType.FIREBIRD;
+        } else if (url.contains(":redshift:")) {
+            return DbType.REDSHIFT;
+        } else if (url.contains(":opengauss:")) {
+            return DbType.OPENGAUSS;
+        } else if (url.contains(":taos:") || url.contains(":taos-rs:")) {
+            return DbType.TDENGINE;
+        } else if (url.contains(":informix")) {
+            return DbType.INFORMIX;
+        } else if (url.contains(":uxdb:")) {
+            return DbType.UXDB;
         } else {
             logger.warn("The jdbcUrl is " + jdbcUrl + ", Mybatis Plus Cannot Read Database type or The Database's Not Supported!");
             return DbType.OTHER;

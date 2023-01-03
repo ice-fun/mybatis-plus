@@ -169,7 +169,31 @@ public enum DbType {
      */
     XCloud("xcloud", "行云数据库"),
     /**
-     * UNKONWN DB
+     * redshift
+     */
+    REDSHIFT("redshift", "亚马逊redshift数据库"),
+
+    /**
+     * openGauss
+     */
+    OPENGAUSS("openGauss", "华为 opengauss 数据库"),
+
+    /**
+     * TDengine
+     */
+    TDENGINE("TDengine", "TDengine数据库"),
+    /**
+     * Informix
+     */
+    INFORMIX("informix", "Informix数据库"),
+
+    /**
+     * uxdb
+     */
+    UXDB("uxdb", "优炫数据库"),
+
+    /**
+     * UNKNOWN DB
      */
     OTHER("other", "其他数据库");
 
